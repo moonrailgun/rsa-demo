@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+    <script src="./js/lib/jquery-2.1.4.js"></script>
+    <script src="./js/lib/bootstrap.js"></script>
+    <script src="./js/rsa.js"></script>
+    <title>rsa demo</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row text-center">
+        <h1>RSA demo</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">参数设置</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <form>
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    <label for="param_p">参数P</label>
+                                    <input type="text" class="form-control" id="param_p" placeholder="请输入参数P,该数字必须为质数"
+                                           value="5">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="param_q">参数Q</label>
+                                    <input type="text" class="form-control" id="param_q" placeholder="请输入参数Q,该数字必须为质数"
+                                           value="13">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="param_q">参数E</label>
+                                    <input type="text" class="form-control" id="param_e" placeholder="请输入参数E,该数字必须为质数"
+                                           value="7">
+                                </div>
+                                <div class="col-sm-3" style="padding-top: 25px;">
+                                    <input type="button" class="btn btn-default" value="应用参数" onclick="applySetting();">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <p class="help-block">请输入参数P,该数字必须为质数</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">当前公钥</div>
+                <div class="panel-body">
+                    <div id="currentPublicKey">(7,65)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-0">
+            <div class="panel panel-default">
+                <div class="panel-heading">当前秘钥</div>
+                <div class="panel-body">
+                    <div id="currentPrivateKey">(7,5,13)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">单数据简单加密</div>
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="simpleEncrypt" placeholder="请输入要加密的数据">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="form-control" value="加密" onclick="rsaSimpleEncrypt();">
+                        </div>
+                    </form>
+                    <p id="simpleEncryptRes" class="help-block">结果:</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-0">
+            <div class="panel panel-default">
+                <div class="panel-heading">单数据简单解密</div>
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="simpleDecrypt" placeholder="请输入要解密的数据">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="form-control" value="解密" onclick="rsaSimpleDecrypt();">
+                        </div>
+                    </form>
+                    <p id="simpleDecryptRes" class="help-block">结果:</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="logger" class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">记录器</div>
+                <div class="panel-body">
+
+                </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var rsa = new RSA(5, 13, 7);
+    updateKey();
+
+    function applySetting() {
+        var p = $('#param_p').val();
+        var q = $('#param_q').val();
+        var e = $('#param_e').val();
+
+        rsa = new RSA(p, q, e);
+        updateKey();
+        alert('参数应用完毕');
+    }
+
+    function rsaSimpleEncrypt() {
+        var m = $('#simpleEncrypt').val();
+        $('#simpleEncryptRes').html('结果:   ' + rsa.encrypt(m));
+        console.log('加密完毕');
+    }
+    function rsaSimpleDecrypt() {
+        var c = $('#simpleDecrypt').val();
+        $('#simpleDecryptRes').html('结果:   ' + rsa.decrypt(c));
+        console.log('解密完毕');
+    }
+
+    function updateKey() {
+        var publicKey = rsa.getPublicKey();
+        var privateKey = rsa.getPrivateKey();
+        $('#currentPublicKey').html('(' + publicKey.e + ',' + publicKey.n + ')');
+        $('#currentPrivateKey').html('(' + privateKey.d + ',' + privateKey.p + ',' + privateKey.q + ')');
+    }
+</script>
+</html>
