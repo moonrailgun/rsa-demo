@@ -50,7 +50,7 @@
     <div class="row">
         <div class="col-sm-4 col-sm-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">当前公钥</div>
+                <div class="panel-heading">当前公钥(e,n)</div>
                 <div class="panel-body">
                     <div id="currentPublicKey">(7,65)</div>
                 </div>
@@ -58,7 +58,7 @@
         </div>
         <div class="col-sm-4 col-sm-offset-0">
             <div class="panel panel-default">
-                <div class="panel-heading">当前秘钥</div>
+                <div class="panel-heading">当前私钥(d,p,q)</div>
                 <div class="panel-body">
                     <div id="currentPrivateKey">(7,5,13)</div>
                 </div>
@@ -102,44 +102,69 @@
     <div id="logger" class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">记录器</div>
-                <div class="panel-body">
+                <div class="panel-heading">日志记录器</div>
+                <div id="loggerContent" class="panel-body">
 
                 </div>
+            </div>
         </div>
     </div>
 </div>
 </body>
 <script>
+    addLog('初始化默认配置');
     var rsa = new RSA(5, 13, 7);
     updateKey();
+    addLog('初始化完毕');
+    addLog('&nbsp');
 
     function applySetting() {
         var p = $('#param_p').val();
         var q = $('#param_q').val();
         var e = $('#param_e').val();
 
+        addLog('正在应用参数，请稍后');
         rsa = new RSA(p, q, e);
         updateKey();
         alert('参数应用完毕');
+        addLog('参数应用完毕');
+        addLog('&nbsp');
     }
 
     function rsaSimpleEncrypt() {
         var m = $('#simpleEncrypt').val();
-        $('#simpleEncryptRes').html('结果:   ' + rsa.encrypt(m));
-        console.log('加密完毕');
+        var res = rsa.encrypt(m);
+        $('#simpleEncryptRes').html('结果:' + res);
+        addLog('加密完毕');
+        addLog('明文:'+ m);
+        addLog('密文:'+ res);
+        addLog('-----------');
+        addLog('&nbsp');
     }
     function rsaSimpleDecrypt() {
         var c = $('#simpleDecrypt').val();
-        $('#simpleDecryptRes').html('结果:   ' + rsa.decrypt(c));
-        console.log('解密完毕');
+        var res = rsa.decrypt(c);
+        $('#simpleDecryptRes').html('结果:' + res);
+        addLog('解密完毕');
+        addLog('密文:'+ c);
+        addLog('明文:'+ res);
+        addLog('-----------');
+        addLog('&nbsp');
     }
 
     function updateKey() {
-        var publicKey = rsa.getPublicKey();
         var privateKey = rsa.getPrivateKey();
-        $('#currentPublicKey').html('(' + publicKey.e + ',' + publicKey.n + ')');
         $('#currentPrivateKey').html('(' + privateKey.d + ',' + privateKey.p + ',' + privateKey.q + ')');
+        addLog('私钥参数：' + JSON.stringify(privateKey));
+
+        var publicKey = rsa.getPublicKey();
+        $('#currentPublicKey').html('(' + publicKey.e + ',' + publicKey.n + ')');
+        addLog('公钥参数：' + JSON.stringify(publicKey));
+    }
+
+    function addLog(str) {
+        $('#loggerContent').append('<p>' + str + '</p>');
+        console.log(str);
     }
 </script>
 </html>
