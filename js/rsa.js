@@ -17,15 +17,6 @@ var getD = function (e, FAIn) {
         }
     }
     return d;
-    //for (var i = 1; i < 100; i++) {
-    //    d = (FAIn + 1) * i / e;
-    //    if(isInt(d)){
-    //        break;
-    //    }
-    //}
-    //if (isInt(d)) {
-    //    return d;
-    //}
 };
 
 var RSA = function (_p, _q, _e) {
@@ -60,12 +51,4 @@ var RSA = function (_p, _q, _e) {
         var c = parseInt(_c);
         return Math.pow(c,d) % n;
     };
-
-    /*
-     this.generateRSAKey = function (passphrase, bitlength) {
-     Math.seedrandom(sha256.hex(passphrase));
-     var rsa = new RSAKey();
-     rsa.generate(bitlength, "03");
-     return rsa;
-     }*/
 };
